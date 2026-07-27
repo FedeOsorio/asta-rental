@@ -13,9 +13,9 @@ Designed as a technical portfolio project demonstrating **security-by-design**, 
    - Eliminates application-layer forgotten `WHERE organization_id = ?` leaks.
 
 2. **Monorepo Architecture (npm Workspaces)**
-   - `packages/shared`: Domain TypeScript types and Zod validation schemas.
-   - `packages/backend`: Express REST API with PostgreSQL pool wrapper, Redis cache, JWT auth, and Vitest.
-   - `packages/frontend`: Next.js App Router UI with modern aesthetic and state management.
+   - `shared`: Domain TypeScript types and Zod validation schemas.
+   - `backend`: Express REST API with PostgreSQL pool wrapper, Redis cache, JWT auth, and Vitest.
+   - `frontend`: Next.js App Router UI with modern aesthetic and state management.
 
 3. **Secure Authentication & Token Strategy**
    - In-memory Short-lived Access Tokens (JWT) + httpOnly Secure Refresh Tokens with DB rotation & Redis token blacklisting.
@@ -49,15 +49,15 @@ Designed as a technical portfolio project demonstrating **security-by-design**, 
    npm run db:up
    ```
 
-3. **Run Prisma Migrations & Seed Database**
+3. **Run Drizzle Migrations & Seed Database**
    ```bash
    npm run db:migrate --workspace=backend
    npm run db:seed --workspace=backend
    ```
 
-4. **Start Backend Server**
+4. **Start Development Servers (Backend & Frontend)**
    ```bash
-   npm run dev:backend
+   npm run dev
    ```
 
 5. **Test Health Check**
@@ -81,10 +81,10 @@ npm run test --workspace=backend
 ```
 asta-rental/
 ├── .specs/               # Feature specs & agent use cases
-├── packages/
-│   ├── shared/           # Shared types & Zod schemas
-│   ├── backend/          # Express API & DB layer (Prisma + pg pool)
-│   └── frontend/         # Next.js App Router application
+├── docs/                 # Architecture documentation
+├── shared/               # Shared types & Zod schemas
+├── backend/              # Express API & DB layer (Drizzle ORM + pg pool)
+├── frontend/             # Next.js App Router application
 ├── docker-compose.yml    # Postgres + Redis dev containers
 ├── package.json          # npm workspace root
 └── README.md

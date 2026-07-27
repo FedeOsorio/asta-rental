@@ -1,4 +1,4 @@
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { withTenantDb } from '../../../../db/index.js';
 import * as schema from '../../../../db/schema.js';
 import { RenterRepositoryPort } from '../../domain/ports/renter-repository.port.js';

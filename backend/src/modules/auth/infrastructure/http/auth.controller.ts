@@ -56,7 +56,7 @@ export class AuthController {
     }
   }
 
-  static async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
+  static async refresh(req: Request, res: Response): Promise<void> {
     try {
       const refreshToken = req.cookies?.[COOKIE_NAME] || req.body?.refreshToken;
       if (!refreshToken) {

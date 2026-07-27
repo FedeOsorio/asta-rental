@@ -9,12 +9,14 @@
     "shared"
   ],
   "scripts": {
+    "dev": "npm run build:shared && npm run dev:backend & npm run dev:frontend",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
+    "build:shared": "npm run build --workspace=shared",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
-    "typecheck": "npm run typecheck --workspaces",
+    "typecheck": "npm run build:shared && npm run typecheck --workspaces",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down"
   },
