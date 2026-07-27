@@ -1,0 +1,24 @@
+{
+  "name": "asta-rental",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multi-tenant Real Estate SaaS with PostgreSQL Row Level Security",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
