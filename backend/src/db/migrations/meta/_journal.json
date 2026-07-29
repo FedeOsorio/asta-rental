@@ -8,6 +8,13 @@
       "when": 1785112219945,
       "tag": "0000_long_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785288979339,
+      "tag": "0001_vengeful_wraith",
+      "breakpoints": true
     }
   ]
 }

@@ -11,3 +11,4 @@ renterRouter.get('/', RenterController.list);
 renterRouter.post('/', roleGuard('admin', 'agent'), RenterController.create);
 renterRouter.get('/:id', RenterController.getById);
 renterRouter.patch('/:id', roleGuard('admin', 'agent'), RenterController.update);
+renterRouter.delete('/:id', roleGuard('admin', 'agent'), RenterController.delete);

@@ -32,7 +32,8 @@ export class RefreshTokenUseCase {
     const { accessToken } = this.tokenService.signAccessToken({
       userId: user.id,
       organizationId: user.organizationId,
-      role: user.role
+      role: user.role,
+      email: user.email
     });
 
     const newRawRefreshToken = this.tokenService.generateRandomToken();

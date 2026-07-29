@@ -3,6 +3,7 @@ export type UserRole = 'admin' | 'agent';
 export interface User {
   id: string;
   organizationId: string;
+  organizationName?: string;
   email: string;
   role: UserRole;
   createdAt: Date;
@@ -12,6 +13,7 @@ export interface AuthPayload {
   sub: string;           // User ID
   org: string;           // Organization ID
   role: UserRole;
+  email: string;
   jti: string;           // Token Unique ID
 }
 
@@ -26,6 +28,7 @@ export interface LoginResponse {
     email: string;
     role: UserRole;
     organizationId: string;
+    organizationName?: string;
   };
   accessToken: string;
 }

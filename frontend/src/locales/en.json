@@ -1,0 +1,161 @@
+{
+  "common": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "actions": "Actions",
+    "confirm_delete": "Are you sure you want to delete this item?",
+    "add_property": "Add Property",
+    "edit_property": "Edit Property",
+    "add_renter": "Add Renter",
+    "edit_renter": "Edit Renter"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "renters": "Renters",
+    "contracts": "Contracts",
+    "payments": "Payments",
+    "drafts": "Claims",
+    "maintenance": "Received Messages",
+    "logout": "Log Out",
+    "logging_out": "Logging out..."
+  },
+  "dashboard": {
+    "title": "Main Dashboard",
+    "subtitle": "Overview of your properties and payments.",
+    "total_collected": "Total Collected",
+    "total_collected_desc": "Last 30 days",
+    "pending_payments": "Pending Payments",
+    "pending_payments_desc": "Requires attention",
+    "overdue_payments": "Overdue Payments",
+    "overdue_payments_desc": "Accumulated debt",
+    "maintenance_requests": "Maintenance Req.",
+    "maintenance_requests_desc": "1 urgent",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing..."
+  },
+  "contracts": {
+    "title": "Lease Contracts",
+    "subtitle": "Create contracts, assign renters, and automatically generate payment schedules.",
+    "create_button": "Create New Lease",
+    "acid_title": "Transactional Guarantee (ACID)",
+    "acid_desc": "When creating a contract, the system validates property availability, marks it as \"rented\", and automatically generates monthly payment installments within the same transaction. If any step fails, everything is rolled back.",
+    "modal_title": "Create Lease Contract",
+    "select_property": "Select Property",
+    "select_renter": "Select Renter",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "monthly_rent": "Monthly Rent ($)",
+    "cancel": "Cancel",
+    "submit": "Execute Lease Transaction"
+  },
+  "payments": {
+    "title": "Payments & Collections",
+    "subtitle": "Manage monthly collections, record payments, and identify overdue accounts.",
+    "table": {
+      "property": "Property",
+      "renter": "Renter",
+      "amount": "Amount",
+      "due_date": "Due Date",
+      "paid_date": "Paid Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "all": "All",
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "cancelled": "Cancelled"
+    },
+    "mark_paid": "Mark Paid",
+    "run_maintenance": "Run Overdue Review"
+  },
+  "drafts": {
+    "title": "Claims (Drafts)",
+    "subtitle": "AI generates messages, but review them before sending to avoid errors.",
+    "generate_button": "Generate Notices for Debtors",
+    "no_drafts": "No drafts pending review.",
+    "card": {
+      "to": "To",
+      "property": "Property",
+      "due": "Due",
+      "amount": "Amount",
+      "status": {
+        "pending": "Pending Review",
+        "approved": "Approved (Simulated)"
+      },
+      "approve": "Approve & Send (WhatsApp)",
+      "reject": "Reject",
+      "send_edited": "Send Edited",
+      "overdue_notice": "Overdue Notice"
+    },
+    "success_generate": "Drafts successfully generated",
+    "success_approve": "Message approved and sent (Simulation)",
+    "loading": "Loading..."
+  },
+  "maintenance": {
+    "title": "Received Messages",
+    "subtitle": "Renters send audio or messages via WhatsApp. AI automatically classifies and assigns priority.",
+    "simulate_button": "Simulate WhatsApp Messages",
+    "simulate_desc": "Simulates an incoming Webhook with a claim.",
+    "table": {
+      "ticket_id": "Ticket ID",
+      "issue": "Identified Issue",
+      "category": "Category",
+      "priority": "Priority",
+      "status": "Status",
+      "renter": "Renter / Origin"
+    },
+    "status": {
+      "open": "Open",
+      "in_progress": "In Progress",
+      "resolved": "Resolved"
+    },
+    "no_tickets": "No maintenance tickets recorded.",
+    "success_simulate": "Webhook processed successfully",
+    "unknown": "Unknown"
+  },
+  "properties": {
+    "subtitle": "Your real estate portfolio: availability, values, and status of each unit.",
+    "monthly_rent": "Monthly Rent",
+    "address": "Address",
+    "address_placeholder": "e.g. 742 Evergreen Terrace",
+    "property_type": "Property Type",
+    "types": {
+      "apartment": "Apartment",
+      "house": "House",
+      "commercial": "Commercial"
+    },
+    "status": {
+      "available": "Available",
+      "rented": "Rented",
+      "maintenance": "Maintenance"
+    }
+  },
+  "renters": {
+    "subtitle": "Contact details, history, and active contracts for each renter.",
+    "active_profile": "Active Profile",
+    "full_name": "Full Name",
+    "full_name_placeholder": "e.g. Jane Doe",
+    "email": "Email Address",
+    "email_placeholder": "jane.doe@example.com",
+    "phone": "Phone Number",
+    "phone_placeholder": "+1 555 0199"
+  },
+  "login": {
+    "title": "A. S. T. A",
+    "subtitle": "Total control over your properties and collections",
+    "email_label": "Email Address",
+    "password_label": "Password",
+    "submit_button": "Sign In",
+    "submitting": "Authenticating...",
+    "error_failed": "Failed to sign in",
+    "quick_access_1": "Quick Access - Real Estate 1",
+    "quick_access_2": "Quick Access - Real Estate 2",
+    "admin_access": "Admin Access",
+    "agent_access": "Agent Access"
+  }
+}

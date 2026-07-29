@@ -72,4 +72,15 @@ export class DrizzleRenterRepository implements RenterRepositoryPort {
       return mapRowToEntity(row);
     });
   }
+
+  async delete(organizationId: string, id: string): Promise<boolean> {
+    return withTenantDb(organizationId, async (tenantDb) => {
+      const [row] = await tenantDb
+        .delete(schema.renters)
+        .where(eq(schema.renters.id, id))
+        .returning({ id: schema.renters.id });
+
+      return !!row;
+    });
+  }
 }

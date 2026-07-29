@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchApi } from '../../../lib/api-client';
+import { useLanguage } from '../../../context/LanguageContext';
 import { Payment, PaymentStatus } from '@asta-rental/shared';
 import { CreditCard, CheckCircle, Clock, AlertTriangle, XCircle, RefreshCw } from 'lucide-react';
 
@@ -9,6 +10,7 @@ export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<PaymentStatus | 'all'>('all');
+  const { t } = useLanguage();
 
   const loadPayments = async () => {
     setLoading(true);
@@ -51,19 +53,19 @@ export default function PaymentsPage() {
       case 'paid':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <CheckCircle className="w-3.5 h-3.5" /> Paid
+            <CheckCircle className="w-3.5 h-3.5" /> {t('payments.status.paid')}
           </span>
         );
       case 'pending':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-            <Clock className="w-3.5 h-3.5" /> Pending
+            <Clock className="w-3.5 h-3.5" /> {t('payments.status.pending')}
           </span>
         );
       case 'overdue':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
-            <AlertTriangle className="w-3.5 h-3.5" /> Overdue
+            <AlertTriangle className="w-3.5 h-3.5" /> {t('payments.status.overdue')}
           </span>
         );
       default:
@@ -79,33 +81,39 @@ export default function PaymentsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-100">Payments</h1>
+          <h1 className="text-2xl font-bold text-gray-100">{t('payments.title')}</h1>
           <p className="text-sm text-gray-400">
-            Seguimiento de cobros por contrato. Marcá pagos recibidos y detectá vencidos.
+            {t('payments.subtitle')}
           </p>
         </div>
 
         <button
           onClick={handleRunMaintenance}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl glass-card text-xs font-medium text-amber-400 hover:text-amber-300 border-amber-500/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl glass-card text-xs font-semibold text-amber-400 hover:text-amber-300 border-amber-500/20"
         >
-          <RefreshCw className="w-3.5 h-3.5" /> Run Overdue Maintenance
+          <RefreshCw className="w-4 h-4" /> {t('payments.run_maintenance') || 'Run Overdue Maintenance'}
         </button>
       </div>
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-gray-800 pb-3">
-        {(['all', 'pending', 'overdue', 'paid', 'cancelled'] as const).map((status) => (
+        {[
+          { key: 'all', label: t('payments.status.all') || 'All' },
+          { key: 'pending', label: t('payments.status.pending') },
+          { key: 'overdue', label: t('payments.status.overdue') },
+          { key: 'paid', label: t('payments.status.paid') },
+          { key: 'cancelled', label: t('payments.status.cancelled') || 'Cancelled' }
+        ].map((item) => (
           <button
-            key={status}
-            onClick={() => setFilter(status)}
+            key={item.key}
+            onClick={() => setFilter(item.key as any)}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-              filter === status
+              filter === item.key
                 ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
                 : 'text-gray-400 hover:text-gray-200'
             }`}
           >
-            {status}
+            {item.label}
           </button>
         ))}
       </div>
@@ -116,11 +124,11 @@ export default function PaymentsPage() {
           <table className="w-full text-left text-sm text-gray-300">
             <thead className="text-xs uppercase bg-gray-900/60 text-gray-400 border-b border-gray-800">
               <tr>
-                <th className="px-4 py-3">Due Date</th>
-                <th className="px-4 py-3">Amount</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Paid Date</th>
-                <th className="px-4 py-3 text-right">Action</th>
+                <th className="px-4 py-3">{t('payments.table.due_date')}</th>
+                <th className="px-4 py-3">{t('payments.table.amount')}</th>
+                <th className="px-4 py-3">{t('payments.table.status')}</th>
+                <th className="px-4 py-3">{t('payments.table.paid_date') || 'Paid Date'}</th>
+                <th className="px-4 py-3 text-right">{t('payments.table.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800/60">
@@ -138,7 +146,7 @@ export default function PaymentsPage() {
                         onClick={() => handleMarkPaid(p.id)}
                         className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 text-xs font-semibold transition-colors"
                       >
-                        Mark as Paid
+                        {t('payments.mark_paid')}
                       </button>
                     )}
                   </td>

@@ -59,43 +59,55 @@ async function seed() {
     .insert(schema.properties)
     .values({
       organizationId: orgAlpha.id,
-      address: '123 Main Street, Suite 4B',
+      address: 'Av. Libertador 1450, Piso 4A',
       type: 'apartment',
       monthlyRent: '1200.00',
       status: 'rented'
     })
     .returning();
 
+  const [propAlpha2] = await db
+    .insert(schema.properties)
+    .values({
+      organizationId: orgAlpha.id,
+      address: 'Calle Gorriti 4820, Palermo',
+      type: 'house',
+      monthlyRent: '2500.00',
+      status: 'rented'
+    })
+    .returning();
+
   await db.insert(schema.properties).values({
     organizationId: orgAlpha.id,
-    address: '456 Ocean Drive',
-    type: 'house',
-    monthlyRent: '2500.00',
-    status: 'available'
-  });
-
-  // 5. Properties for Org Beta
-  await db.insert(schema.properties).values({
-    organizationId: orgBeta.id,
-    address: '789 Commercial Boulevard',
+    address: 'Av. Corrientes 800, Local 12',
     type: 'commercial',
-    monthlyRent: '4000.00',
+    monthlyRent: '3500.00',
     status: 'available'
   });
 
-  // 6. Renter for Org Alpha
+  // 6. Renters for Org Alpha
   const [renterAlpha1] = await db
     .insert(schema.renters)
     .values({
       organizationId: orgAlpha.id,
-      fullName: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+15550199'
+      fullName: 'Carlos Rodríguez',
+      email: 'carlos.rodriguez@example.com',
+      phone: '+5491144332211'
     })
     .returning();
 
-  // 7. Contract & Payments for Org Alpha
-  const [contractAlpha] = await db
+  const [renterAlpha2] = await db
+    .insert(schema.renters)
+    .values({
+      organizationId: orgAlpha.id,
+      fullName: 'María Fernández',
+      email: 'maria.fernandez@example.com',
+      phone: '+5491155667788'
+    })
+    .returning();
+
+  // 7. Contracts & Payments for Org Alpha
+  const [contractAlpha1] = await db
     .insert(schema.contracts)
     .values({
       organizationId: orgAlpha.id,
@@ -108,10 +120,24 @@ async function seed() {
     })
     .returning();
 
+  const [contractAlpha2] = await db
+    .insert(schema.contracts)
+    .values({
+      organizationId: orgAlpha.id,
+      propertyId: propAlpha2.id,
+      renterId: renterAlpha2.id,
+      startDate: '2026-01-01',
+      endDate: '2026-12-31',
+      monthlyRent: '2500.00',
+      status: 'active'
+    })
+    .returning();
+
+  // Payments for Contract 1
   await db.insert(schema.payments).values([
     {
       organizationId: orgAlpha.id,
-      contractId: contractAlpha.id,
+      contractId: contractAlpha1.id,
       dueDate: '2026-01-01',
       paidDate: '2026-01-02',
       amount: '1200.00',
@@ -119,17 +145,44 @@ async function seed() {
     },
     {
       organizationId: orgAlpha.id,
-      contractId: contractAlpha.id,
-      dueDate: '2026-02-01',
+      contractId: contractAlpha1.id,
+      dueDate: '2026-01-15', // FECHA PASADA PERO PENDIENTE -> Para probar el botón de Mantenimiento!
       paidDate: null,
       amount: '1200.00',
+      status: 'pending'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha1.id,
+      dueDate: '2026-08-01', // FECHA FUTURA PENDIENTE -> No cambiará al correr Mantenimiento
+      paidDate: null,
+      amount: '1200.00',
+      status: 'pending'
+    }
+  ]);
+
+  // Payments for Contract 2
+  await db.insert(schema.payments).values([
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha2.id,
+      dueDate: '2026-01-10',
+      paidDate: null,
+      amount: '2500.00',
       status: 'overdue'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha2.id,
+      dueDate: '2026-01-20', // FECHA PASADA PERO PENDIENTE -> También cambiará a Overdue al presionar el botón!
+      paidDate: null,
+      amount: '2500.00',
+      status: 'pending'
     }
   ]);
 
   console.log('✅ Drizzle seed completed successfully!');
-  console.log(`- Org Alpha ID: ${orgAlpha.id} (admin@alpha.com / agent@alpha.com)`);
-  console.log(`- Org Beta ID: ${orgBeta.id} (admin@beta.com)`);
+  console.log(`- Org Alpha (admin@alpha.com / agent@alpha.com)`);
   console.log('Password for all users: password123');
 
   await pool.end();

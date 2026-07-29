@@ -20,8 +20,8 @@ function setRefreshTokenCookie(res: Response, token: string): void {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/auth',
+    sameSite: 'lax',
+    path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 }
@@ -30,8 +30,8 @@ function clearRefreshTokenCookie(res: Response): void {
   res.clearCookie(COOKIE_NAME, {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/auth'
+    sameSite: 'lax',
+    path: '/'
   });
 }
 
@@ -90,16 +90,32 @@ export class AuthController {
     }
   }
 
-  static me(req: Request, res: Response): void {
+  static async me(req: Request, res: Response): Promise<void> {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    res.status(200).json({
-      userId: req.user.userId,
-      organizationId: req.user.organizationId,
-      role: req.user.role
-    });
+    try {
+      const { db } = await import('../../../../db/index.js');
+      const schema = await import('../../../../db/schema.js');
+      const { eq } = await import('drizzle-orm');
+
+      const [organization] = await db
+        .select({ name: schema.organizations.name })
+        .from(schema.organizations)
+        .where(eq(schema.organizations.id, req.user.organizationId));
+
+      res.status(200).json({
+        userId: req.user.userId,
+        organizationId: req.user.organizationId,
+        organizationName: organization?.name || 'Unknown Organization',
+        role: req.user.role,
+        email: req.user.email
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to fetch user data' });
+    }
   }
 }

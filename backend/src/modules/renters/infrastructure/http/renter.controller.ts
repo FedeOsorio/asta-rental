@@ -6,12 +6,15 @@ import { ListRentersUseCase } from '../../application/use-cases/list-renters.use
 import { GetRenterByIdUseCase } from '../../application/use-cases/get-renter-by-id.use-case.js';
 import { UpdateRenterUseCase } from '../../application/use-cases/update-renter.use-case.js';
 
+import { DeleteRenterUseCase } from '../../application/use-cases/delete-renter.use-case.js';
+
 const renterRepo = new DrizzleRenterRepository();
 
 const createRenterUseCase = new CreateRenterUseCase(renterRepo);
 const listRentersUseCase = new ListRentersUseCase(renterRepo);
 const getRenterByIdUseCase = new GetRenterByIdUseCase(renterRepo);
 const updateRenterUseCase = new UpdateRenterUseCase(renterRepo);
+const deleteRenterUseCase = new DeleteRenterUseCase(renterRepo);
 
 export class RenterController {
   static async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -55,6 +58,19 @@ export class RenterController {
         validatedInput
       );
       res.status(200).json(updated);
+    } catch (error: any) {
+      if (error.message === 'RENTER_NOT_FOUND') {
+        res.status(404).json({ error: 'Renter not found' });
+        return;
+      }
+      next(error);
+    }
+  }
+
+  static async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await deleteRenterUseCase.execute(req.user!.organizationId, req.params.id);
+      res.status(200).json({ message: 'Renter deleted successfully' });
     } catch (error: any) {
       if (error.message === 'RENTER_NOT_FOUND') {
         res.status(404).json({ error: 'Renter not found' });

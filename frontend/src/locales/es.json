@@ -1,0 +1,161 @@
+{
+  "common": {
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "actions": "Acciones",
+    "confirm_delete": "¿Estás seguro de que deseas eliminar este elemento?",
+    "add_property": "Agregar Propiedad",
+    "edit_property": "Editar Propiedad",
+    "add_renter": "Agregar Inquilino",
+    "edit_renter": "Editar Inquilino"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Propiedades",
+    "renters": "Inquilinos",
+    "contracts": "Contratos",
+    "payments": "Pagos",
+    "drafts": "Reclamos",
+    "maintenance": "Mensajes recibidos",
+    "logout": "Cerrar Sesión",
+    "logging_out": "Cerrando..."
+  },
+  "dashboard": {
+    "title": "Panel Principal",
+    "subtitle": "Resumen de tus propiedades y pagos.",
+    "total_collected": "Total Recaudado",
+    "total_collected_desc": "Últimos 30 días",
+    "pending_payments": "Pagos Pendientes",
+    "pending_payments_desc": "Requieren atención",
+    "overdue_payments": "Pagos Vencidos",
+    "overdue_payments_desc": "Mora acumulada",
+    "maintenance_requests": "Req. de Mantenimiento",
+    "maintenance_requests_desc": "1 urgente",
+    "refresh": "Actualizar",
+    "refreshing": "Actualizando..."
+  },
+  "contracts": {
+    "title": "Contratos de Alquiler",
+    "subtitle": "Creá contratos, asigná inquilinos y generá automáticamente el calendario de pagos.",
+    "create_button": "Crear Nuevo Contrato",
+    "acid_title": "Garantía Transaccional (ACID)",
+    "acid_desc": "Al crear un contrato, el sistema valida la disponibilidad de la propiedad, la marca como \"alquilada\", y genera automáticamente las cuotas mensuales de cobro dentro de una misma transacción. Si algún paso falla, se revierte todo.",
+    "modal_title": "Crear Contrato de Alquiler",
+    "select_property": "Seleccionar Propiedad",
+    "select_renter": "Seleccionar Inquilino",
+    "start_date": "Fecha Inicio",
+    "end_date": "Fecha Fin",
+    "monthly_rent": "Alquiler Mensual ($)",
+    "cancel": "Cancelar",
+    "submit": "Ejecutar Contrato"
+  },
+  "payments": {
+    "title": "Cobros y Pagos",
+    "subtitle": "Gestioná los cobros mensuales, registrá pagos e identificá deudores.",
+    "table": {
+      "property": "Propiedad",
+      "renter": "Inquilino",
+      "amount": "Monto",
+      "due_date": "Vencimiento",
+      "paid_date": "Fecha de Pago",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "status": {
+      "all": "Todos",
+      "paid": "Pagado",
+      "pending": "Pendiente",
+      "overdue": "Vencido",
+      "cancelled": "Cancelado"
+    },
+    "mark_paid": "Marcar Pagado",
+    "run_maintenance": "Ejecutar Revisión de Mora"
+  },
+  "drafts": {
+    "title": "Reclamos (Borradores)",
+    "subtitle": "La IA genera los mensajes, pero revíselos antes de enviarlos a fin de evitar errores.",
+    "generate_button": "Generar Avisos para Deudores",
+    "no_drafts": "No hay borradores pendientes de revisión.",
+    "card": {
+      "to": "Para",
+      "property": "Propiedad",
+      "due": "Vencimiento",
+      "amount": "Monto",
+      "status": {
+        "pending": "Pendiente de Revisión",
+        "approved": "Aprobado (Simulado)"
+      },
+      "approve": "Aprobar y Enviar (WhatsApp)",
+      "reject": "Rechazar",
+      "send_edited": "Enviar Editado",
+      "overdue_notice": "Aviso de Mora"
+    },
+    "success_generate": "Borradores generados con éxito",
+    "success_approve": "Mensaje aprobado y enviado (Simulación)",
+    "loading": "Cargando..."
+  },
+  "maintenance": {
+    "title": "Mensajes Recibidos",
+    "subtitle": "Los inquilinos envían audios o mensajes por WhatsApp. La IA los clasifica y asigna prioridad automáticamente.",
+    "simulate_button": "Simular Mensajes de WhatsApp",
+    "simulate_desc": "Simula un Webhook entrante con un reclamo.",
+    "table": {
+      "ticket_id": "Ticket ID",
+      "issue": "Problema Identificado",
+      "category": "Categoría",
+      "priority": "Prioridad",
+      "status": "Estado",
+      "renter": "Inquilino / Origen"
+    },
+    "status": {
+      "open": "Abierto",
+      "in_progress": "En Progreso",
+      "resolved": "Resuelto"
+    },
+    "no_tickets": "No hay tickets de mantenimiento registrados.",
+    "success_simulate": "Webhook procesado exitosamente",
+    "unknown": "Desconocido"
+  },
+  "properties": {
+    "subtitle": "Tu cartera inmobiliaria: disponibilidad, valores y estado de cada unidad.",
+    "monthly_rent": "Renta Mensual",
+    "address": "Dirección",
+    "address_placeholder": "ej. 742 Evergreen Terrace",
+    "property_type": "Tipo de Propiedad",
+    "types": {
+      "apartment": "Departamento",
+      "house": "Casa",
+      "commercial": "Comercial"
+    },
+    "status": {
+      "available": "Disponible",
+      "rented": "Alquilada",
+      "maintenance": "Mantenimiento"
+    }
+  },
+  "renters": {
+    "subtitle": "Datos de contacto, historial y contratos activos de cada inquilino.",
+    "active_profile": "Perfil Activo",
+    "full_name": "Nombre Completo",
+    "full_name_placeholder": "ej. Juan Pérez",
+    "email": "Correo Electrónico",
+    "email_placeholder": "juan.perez@ejemplo.com",
+    "phone": "Número de Teléfono",
+    "phone_placeholder": "+54 11 1234 5678"
+  },
+  "login": {
+    "title": "A. S. T. A",
+    "subtitle": "Control total sobre tus propiedades y cobranzas",
+    "email_label": "Correo Electrónico",
+    "password_label": "Contraseña",
+    "submit_button": "Iniciar Sesión",
+    "submitting": "Autenticando...",
+    "error_failed": "Error al iniciar sesión",
+    "quick_access_1": "Acceso rápido - Inmobiliaria 1",
+    "quick_access_2": "Acceso rápido - Inmobiliaria 2",
+    "admin_access": "Acceso Admin",
+    "agent_access": "Acceso Agente"
+  }
+}

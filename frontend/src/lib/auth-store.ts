@@ -3,6 +3,7 @@ interface UserState {
   email: string;
   role: 'admin' | 'agent';
   organizationId: string;
+  organizationName?: string;
 }
 
 class AuthStore {

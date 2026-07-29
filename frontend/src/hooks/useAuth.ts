@@ -15,6 +15,11 @@ export function useAuth() {
 
     // Check session via refresh token on mount
     async function checkSession() {
+      if (authStore.getUser()) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const data = await fetchApi('/auth/refresh', { method: 'POST' });
         authStore.setAccessToken(data.accessToken);
@@ -22,9 +27,10 @@ export function useAuth() {
         const me = await fetchApi('/auth/me');
         authStore.setAuth(data.accessToken, {
           id: me.userId,
-          email: me.email || 'user@agency.com',
+          email: me.email,
           role: me.role,
-          organizationId: me.organizationId
+          organizationId: me.organizationId,
+          organizationName: me.organizationName
         });
       } catch {
         authStore.clear();

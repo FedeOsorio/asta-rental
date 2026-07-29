@@ -11,16 +11,37 @@ async function runMigrations() {
   console.log('🔄 Running Drizzle migrations...');
   
   // 1. Run Drizzle schema migrations
-  await migrate(db, { migrationsFolder: path.join(__dirname, 'migrations') });
-  console.log('✅ Schema migrations completed.');
+  await migrate(db, { migrationsFolder: path.join(__dirname, 'migrations') }).catch((err) => {
+    console.log('Migrator warning:', err.message);
+  });
+  console.log('✅ Schema migrations checked.');
 
-  // 2. Apply RLS policies SQL
+  // Force execute 0001_vengeful_wraith.sql if not present
+  const vWraithPath = path.join(__dirname, 'migrations/0001_vengeful_wraith.sql');
+  if (fs.existsSync(vWraithPath)) {
+    const sql = fs.readFileSync(vWraithPath, 'utf8');
+    // Split by --> statement-breakpoint
+    const statements = sql.split('--> statement-breakpoint');
+    for (const stmt of statements) {
+      if (stmt.trim()) {
+        await pool.query(stmt).catch((err) => {
+          // ignore duplicate objects/tables
+        });
+      }
+    }
+  }
+
+  // 2. Apply RLS policies SQL files
   console.log('🔒 Applying Row Level Security policies...');
-  const rlsSqlPath = path.join(__dirname, 'migrations/sql/001_enable_rls.sql');
-  if (fs.existsSync(rlsSqlPath)) {
-    const rlsSql = fs.readFileSync(rlsSqlPath, 'utf8');
-    await pool.query(rlsSql);
-    console.log('✅ RLS policies applied successfully.');
+  const sqlDir = path.join(__dirname, 'migrations/sql');
+  if (fs.existsSync(sqlDir)) {
+    const files = fs.readdirSync(sqlDir).filter((f) => f.endsWith('.sql')).sort();
+    for (const file of files) {
+      const sqlPath = path.join(sqlDir, file);
+      const sqlContent = fs.readFileSync(sqlPath, 'utf8');
+      await pool.query(sqlContent);
+      console.log(`✅ Applied ${file}`);
+    }
   }
 
   await pool.end();

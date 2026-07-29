@@ -1,6 +1,8 @@
 'use client';
 
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
+import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -11,11 +13,14 @@ import {
   CreditCard,
   LogOut,
   ShieldAlert,
-  Loader2
+  Loader2,
+  AlertCircle,
+  MessageSquare
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, loading, logout } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -35,11 +40,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   const navItems = [
-    { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-    { label: 'Properties', href: '/properties', icon: Building2 },
-    { label: 'Renters', href: '/renters', icon: Users },
-    { label: 'Contracts', href: '/contracts', icon: FileText },
-    { label: 'Payments', href: '/payments', icon: CreditCard }
+    { label: t('nav.dashboard'), href: '/', icon: LayoutDashboard },
+    { label: t('nav.properties'), href: '/properties', icon: Building2 },
+    { label: t('nav.renters'), href: '/renters', icon: Users },
+    { label: t('nav.contracts'), href: '/contracts', icon: FileText },
+    { label: t('nav.payments'), href: '/payments', icon: CreditCard },
+    ...(user?.role === 'admin' ? [
+      { label: t('nav.drafts'), href: '/drafts', icon: AlertCircle },
+      { label: t('nav.maintenance'), href: '/maintenance', icon: MessageSquare }
+    ] : [])
   ];
 
   return (
@@ -62,13 +71,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
 
         {/* Organization Badge */}
-        <div className="mx-4 my-4 p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs">
+        <div className="mx-4 my-4 p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs flex flex-col justify-center">
           <div className="flex items-center gap-2 text-indigo-400 font-medium mb-1">
             <ShieldAlert className="w-3.5 h-3.5" />
-            <span>Organización activa</span>
+            <span>Org</span>
           </div>
-          <p className="text-gray-400 font-mono text-[11px] truncate">
-            {user?.organizationId}
+          <p
+            className="text-gray-400 font-medium text-xs truncate"
+            title={`ID: ${user?.organizationId}`}
+          >
+            {user?.organizationName || user?.organizationId}
           </p>
         </div>
 
@@ -93,6 +105,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
+        <div className="px-4 pb-4">
+          <LanguageSwitcher />
+        </div>
+
         {/* Footer User Info & Logout */}
         <div className="p-4 border-t border-gray-800/60">
           <div className="flex items-center justify-between">
@@ -104,7 +120,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <button
               onClick={() => logout()}
-              title="Sign Out"
+              title={t('nav.logout')}
               className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
             >
               <LogOut className="w-4 h-4" />

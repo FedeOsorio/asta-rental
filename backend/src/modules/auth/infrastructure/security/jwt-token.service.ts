@@ -11,7 +11,7 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const BLOCK_WINDOW_SECONDS = 15 * 60; // 15 minutes
 
 export class JwtTokenService implements TokenServicePort {
-  signAccessToken(params: { userId: string; organizationId: string; role: UserRole }): {
+  signAccessToken(params: { userId: string; organizationId: string; role: UserRole; email: string }): {
     accessToken: string;
     jti: string;
   } {
@@ -20,6 +20,7 @@ export class JwtTokenService implements TokenServicePort {
       sub: params.userId,
       org: params.organizationId,
       role: params.role,
+      email: params.email,
       jti
     };
 
@@ -34,6 +35,7 @@ export class JwtTokenService implements TokenServicePort {
     sub: string;
     org: string;
     role: UserRole;
+    email: string;
     jti: string;
     exp?: number;
   } {

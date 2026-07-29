@@ -14,6 +14,10 @@ export const propertyTypeEnum = pgEnum('property_type', ['apartment', 'house', '
 export const propertyStatusEnum = pgEnum('property_status', ['available', 'rented', 'maintenance']);
 export const contractStatusEnum = pgEnum('contract_status', ['active', 'expired', 'terminated']);
 export const paymentStatusEnum = pgEnum('payment_status', ['pending', 'paid', 'overdue', 'cancelled']);
+export const communicationStatusEnum = pgEnum('communication_status', ['draft', 'approved', 'sent', 'rejected']);
+export const ticketUrgencyEnum = pgEnum('ticket_urgency', ['low', 'medium', 'high', 'critical']);
+export const ticketCategoryEnum = pgEnum('ticket_category', ['plumbing', 'electrical', 'gas', 'structural', 'other']);
+export const ticketStatusEnum = pgEnum('ticket_status', ['open', 'in_progress', 'resolved']);
 
 // Organizations
 export const organizations = pgTable('organizations', {
@@ -104,5 +108,37 @@ export const payments = pgTable('payments', {
   paidDate: date('paid_date'),
   amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
   status: paymentStatusEnum('status').default('pending').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+// Communications (AI Drafts / Messages)
+export const communications = pgTable('communications', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  renterId: uuid('renter_id')
+    .notNull()
+    .references(() => renters.id, { onDelete: 'cascade' }),
+  type: text('type').notNull(), // e.g., 'overdue_notice'
+  content: text('content').notNull(),
+  status: communicationStatusEnum('status').default('draft').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+// Maintenance Tickets (AI Classified)
+export const maintenanceTickets = pgTable('maintenance_tickets', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  propertyId: uuid('property_id')
+    .references(() => properties.id, { onDelete: 'cascade' }), // Optional if renter doesn't specify
+  renterId: uuid('renter_id')
+    .references(() => renters.id, { onDelete: 'cascade' }),
+  description: text('description').notNull(),
+  urgency: ticketUrgencyEnum('urgency').default('low').notNull(),
+  category: ticketCategoryEnum('category').default('other').notNull(),
+  status: ticketStatusEnum('status').default('open').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
 });

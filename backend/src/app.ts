@@ -8,6 +8,8 @@ import { renterRouter } from './modules/renters/infrastructure/http/renter.route
 import { contractRouter } from './modules/contracts/infrastructure/http/contract.routes.js';
 import { paymentRouter } from './modules/payments/infrastructure/http/payment.routes.js';
 import { dashboardRouter } from './modules/dashboard/infrastructure/http/dashboard.routes.js';
+import { communicationsRouter } from './modules/communications/infrastructure/http/communications.routes.js';
+import { maintenanceRouter } from './modules/maintenance/infrastructure/http/maintenance.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 export const app: Express = express();
@@ -32,6 +34,8 @@ app.use('/renters', renterRouter);
 app.use('/contracts', contractRouter);
 app.use('/payments', paymentRouter);
 app.use('/dashboard', dashboardRouter);
+app.use('/communications', communicationsRouter);
+app.use('/maintenance', maintenanceRouter);
 
 // Global Error Handler
 app.use(errorHandler);

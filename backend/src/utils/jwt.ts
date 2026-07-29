@@ -7,9 +7,10 @@ export interface SignAccessTokenParams {
   userId: string;
   organizationId: string;
   role: UserRole;
+  email: string;
 }
 
-export function signAccessToken({ userId, organizationId, role }: SignAccessTokenParams): {
+export function signAccessToken({ userId, organizationId, role, email }: SignAccessTokenParams): {
   accessToken: string;
   jti: string;
 } {
@@ -18,6 +19,7 @@ export function signAccessToken({ userId, organizationId, role }: SignAccessToke
     sub: userId,
     org: organizationId,
     role,
+    email,
     jti
   };
 

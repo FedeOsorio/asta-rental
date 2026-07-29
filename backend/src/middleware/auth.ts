@@ -32,6 +32,7 @@ export async function authenticate(
       userId: decoded.sub,
       organizationId: decoded.org,
       role: decoded.role,
+      email: decoded.email,
       jti: decoded.jti,
       rawToken: token
     };

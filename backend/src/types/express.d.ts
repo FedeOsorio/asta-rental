@@ -7,6 +7,7 @@ declare global {
         userId: string;
         organizationId: string;
         role: UserRole;
+        email: string;
         jti: string;
         rawToken: string;
       };

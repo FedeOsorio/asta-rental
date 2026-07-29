@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../hooks/useAuth';
+import { useLanguage } from '../../../context/LanguageContext';
 import { Building2, Lock, Mail, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,7 +24,7 @@ export default function LoginPage() {
       await login(email, password);
       router.push('/');
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+      setError(err.message || t('login.error_failed'));
     } finally {
       setSubmitting(false);
     }
@@ -41,8 +43,8 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mb-4 shadow-lg shadow-indigo-500/10">
             <Building2 className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight gradient-text">A. S. T. A</h1>
-          <p className="text-gray-400 mt-2 text-sm">Control total sobre tus propiedades y cobranzas</p>
+          <h1 className="text-3xl font-bold tracking-tight gradient-text">{t('login.title')}</h1>
+          <p className="text-gray-400 mt-2 text-sm">{t('login.subtitle')}</p>
         </div>
 
         {/* Login Glass Card */}
@@ -56,7 +58,7 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">
-                Email Address
+                {t('login.email_label')}
               </label>
               <div className="relative">
                 <Mail className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
@@ -73,7 +75,7 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">
-                Password
+                {t('login.password_label')}
               </label>
               <div className="relative">
                 <Lock className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
@@ -93,36 +95,39 @@ export default function LoginPage() {
               disabled={submitting}
               className="w-full py-3.5 px-4 gradient-btn text-white font-medium rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 disabled:opacity-50"
             >
-              {submitting ? 'Authenticating...' : 'Sign In'}
+              {submitting ? t('login.submitting') : t('login.submit_button')}
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
           {/* Quick Demo Login Preset Buttons */}
           <div className="mt-8 pt-6 border-t border-gray-800">
-            <p className="text-xs text-gray-500 mb-3">Acceso rápido</p>
-
-            <div className="grid grid-cols-3 gap-2 text-xs">
+            <p className="text-xs text-gray-500 mb-3 font-medium">{t('login.quick_access_1')}</p>
+            <div className="grid grid-cols-2 gap-2 text-xs mb-4">
               <button
                 type="button"
                 onClick={() => fillDemoCredentials('admin@alpha.com')}
                 className="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 text-gray-300 border border-gray-700/50 transition-colors text-center"
               >
-                Alpha Admin
+                {t('login.admin_access')}
               </button>
               <button
                 type="button"
                 onClick={() => fillDemoCredentials('agent@alpha.com')}
                 className="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 text-gray-300 border border-gray-700/50 transition-colors text-center"
               >
-                Alpha Agent
+                {t('login.agent_access')}
               </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mb-3 font-medium">{t('login.quick_access_2')}</p>
+            <div className="grid grid-cols-1 gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => fillDemoCredentials('admin@beta.com')}
                 className="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 text-gray-300 border border-gray-700/50 transition-colors text-center"
               >
-                Beta Admin
+                {t('login.admin_access')}
               </button>
             </div>
           </div>

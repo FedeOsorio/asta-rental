@@ -1,7 +1,7 @@
 import { UserRole } from '@asta-rental/shared';
 
 export interface TokenServicePort {
-  signAccessToken(params: { userId: string; organizationId: string; role: UserRole }): {
+  signAccessToken(params: { userId: string; organizationId: string; role: UserRole; email: string }): {
     accessToken: string;
     jti: string;
   };
@@ -9,6 +9,7 @@ export interface TokenServicePort {
     sub: string;
     org: string;
     role: UserRole;
+    email: string;
     jti: string;
     exp?: number;
   };

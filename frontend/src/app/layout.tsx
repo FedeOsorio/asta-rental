@@ -6,12 +6,17 @@ export const metadata: Metadata = {
   description: 'Plataforma de gestión de alquileres y propiedades inmobiliarias'
 };
 
+import { LanguageProvider } from '../context/LanguageContext';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
       <body className="bg-[#0B0F19] text-gray-100 antialiased font-sans">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
+
     </html>
   );
 }
