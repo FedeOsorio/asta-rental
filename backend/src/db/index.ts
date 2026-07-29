@@ -19,11 +19,19 @@ export async function withTenantDb<T>(
 ): Promise<T> {
   const client = await pool.connect();
   try {
-    await client.query(`SELECT set_config('app.current_org', $1, false)`, [organizationId]);
+    await client.query('BEGIN');
+    await client.query(`SET LOCAL ROLE app_user`);
+    await client.query(`SELECT set_config('app.current_org', $1, true)`, [organizationId]);
+    
     const tenantDb = drizzle(client, { schema });
-    return await callback(tenantDb);
+    const result = await callback(tenantDb);
+    
+    await client.query('COMMIT');
+    return result;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
   } finally {
-    await client.query(`SELECT set_config('app.current_org', '', false)`).catch(() => {});
     client.release();
   }
 }
