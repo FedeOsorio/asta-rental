@@ -115,7 +115,7 @@ export default function MaintenancePage() {
                   {t('maintenance.table.category')}: {ticket.category}
                 </span>
                 <p className="text-gray-300 text-sm bg-gray-900/50 p-3 rounded-lg mt-2 border border-gray-800 italic">
-                  "{ticket.description}"
+                  &quot;{ticket.description}&quot;
                 </p>
               </div>
 

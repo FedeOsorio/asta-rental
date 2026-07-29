@@ -2,11 +2,55 @@ import { authStore } from './auth-store';
 
 const API_BASE_URL = 'http://localhost:4000';
 
+let refreshPromise: Promise<string> | null = null;
+
+export async function refreshAccessToken(): Promise<string> {
+  if (refreshPromise) {
+    return refreshPromise;
+  }
+
+  refreshPromise = (async () => {
+    try {
+      const storedRefreshToken = authStore.getRefreshToken();
+      if (!storedRefreshToken) {
+        throw new Error('No refresh token available');
+      }
+      const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: storedRefreshToken ? JSON.stringify({ refreshToken: storedRefreshToken }) : undefined,
+        credentials: 'include',
+        cache: 'no-store'
+      });
+
+      if (!refreshRes.ok) {
+        authStore.clear();
+        const errorData = await refreshRes.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Refresh failed');
+      }
+
+      const refreshData = await refreshRes.json();
+      authStore.setAccessToken(refreshData.accessToken);
+      if (refreshData.refreshToken) {
+        authStore.setRefreshToken(refreshData.refreshToken);
+      }
+      return refreshData.accessToken;
+    } catch (err) {
+      authStore.clear();
+      throw err;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
 export async function fetchApi<T = any>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const token = authStore.getAccessToken();
+  let token = authStore.getAccessToken();
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -20,34 +64,23 @@ export async function fetchApi<T = any>(
   let response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
-    credentials: 'include' // Send refresh cookie
+    credentials: 'include', // Send refresh cookie
+    cache: 'no-store'
   });
 
   // Handle 401 Unauthorized (token expired -> attempt auto-refresh)
   if (response.status === 401 && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
     try {
-      const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
+      const newToken = await refreshAccessToken();
+      headers['Authorization'] = `Bearer ${newToken}`;
+      response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+        credentials: 'include',
+        cache: 'no-store'
       });
-
-      if (refreshRes.ok) {
-        const refreshData = await refreshRes.json();
-        authStore.setAccessToken(refreshData.accessToken);
-
-        // Retry original request with new access token
-        headers['Authorization'] = `Bearer ${refreshData.accessToken}`;
-        response = await fetch(`${API_BASE_URL}${endpoint}`, {
-          ...options,
-          headers,
-          credentials: 'include'
-        });
-      } else {
-        authStore.clear();
-      }
     } catch {
-      authStore.clear();
+      // Refresh failed, response remains 401
     }
   }
 

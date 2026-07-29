@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { fetchApi } from '../../../lib/api-client';
 import { useLanguage } from '../../../context/LanguageContext';
 import { Payment, PaymentStatus } from '@asta-rental/shared';
@@ -12,7 +12,7 @@ export default function PaymentsPage() {
   const [filter, setFilter] = useState<PaymentStatus | 'all'>('all');
   const { t } = useLanguage();
 
-  const loadPayments = async () => {
+  const loadPayments = useCallback(async () => {
     setLoading(true);
     try {
       const endpoint = filter === 'all' ? '/payments' : `/payments?status=${filter}`;
@@ -23,11 +23,11 @@ export default function PaymentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
 
   useEffect(() => {
     loadPayments();
-  }, [filter]);
+  }, [loadPayments]);
 
   const handleMarkPaid = async (id: string) => {
     try {

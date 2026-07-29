@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { authStore } from '../lib/auth-store';
-import { fetchApi } from '../lib/api-client';
+import { fetchApi, refreshAccessToken } from '../lib/api-client';
+
+let sessionCheckPromise: Promise<void> | null = null;
 
 export function useAuth() {
   const [user, setUser] = useState(authStore.getUser());
@@ -21,25 +23,29 @@ export function useAuth() {
       }
 
       try {
-        const data = await fetchApi('/auth/refresh', { method: 'POST' });
-        authStore.setAccessToken(data.accessToken);
-
+        const accessToken = await refreshAccessToken();
         const me = await fetchApi('/auth/me');
-        authStore.setAuth(data.accessToken, {
+        authStore.setAuth(accessToken, {
           id: me.userId,
           email: me.email,
           role: me.role,
           organizationId: me.organizationId,
           organizationName: me.organizationName
         });
-      } catch {
+      } catch (error) {
+        // Silently fail and clear store if refresh token is invalid/expired
         authStore.clear();
-      } finally {
-        setLoading(false);
       }
     }
 
-    checkSession();
+    if (!sessionCheckPromise) {
+      sessionCheckPromise = checkSession().finally(() => {
+        sessionCheckPromise = null;
+        setLoading(false);
+      });
+    } else {
+      sessionCheckPromise.finally(() => setLoading(false));
+    }
 
     return unsubscribe;
   }, []);
@@ -49,7 +55,7 @@ export function useAuth() {
       method: 'POST',
       body: JSON.stringify({ email, password })
     });
-    authStore.setAuth(data.accessToken, data.user);
+    authStore.setAuth(data.accessToken, data.user, data.refreshToken);
     return data;
   };
 

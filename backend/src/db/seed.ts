@@ -85,6 +85,48 @@ async function seed() {
     status: 'available'
   });
 
+  const [propAlpha3] = await db
+    .insert(schema.properties)
+    .values({
+      organizationId: orgAlpha.id,
+      address: 'Av. Belgrano 1200, Piso 2B',
+      type: 'apartment',
+      monthlyRent: '800.00',
+      status: 'rented'
+    })
+    .returning();
+
+  const [propAlpha4] = await db
+    .insert(schema.properties)
+    .values({
+      organizationId: orgAlpha.id,
+      address: 'Calle Florida 500, Local 5',
+      type: 'commercial',
+      monthlyRent: '5000.00',
+      status: 'rented'
+    })
+    .returning();
+
+  await db.insert(schema.properties).values({
+    organizationId: orgAlpha.id,
+    address: 'Av. Santa Fe 3200, Piso 8',
+    type: 'apartment',
+    monthlyRent: '1500.00',
+    status: 'available'
+  });
+
+  const [propAlpha5] = await db
+    .insert(schema.properties)
+    .values({
+      organizationId: orgAlpha.id,
+      address: 'Calle Honduras 4900, Casa',
+      type: 'house',
+      monthlyRent: '3000.00',
+      status: 'rented'
+    })
+    .returning();
+
+
   // 6. Renters for Org Alpha
   const [renterAlpha1] = await db
     .insert(schema.renters)
@@ -103,6 +145,36 @@ async function seed() {
       fullName: 'María Fernández',
       email: 'maria.fernandez@example.com',
       phone: '+5491155667788'
+    })
+    .returning();
+
+  const [renterAlpha3] = await db
+    .insert(schema.renters)
+    .values({
+      organizationId: orgAlpha.id,
+      fullName: 'Lucía Gómez',
+      email: 'lucia.gomez@example.com',
+      phone: '+5491133445566'
+    })
+    .returning();
+
+  const [renterAlpha4] = await db
+    .insert(schema.renters)
+    .values({
+      organizationId: orgAlpha.id,
+      fullName: 'Martín Pérez',
+      email: 'martin.perez@example.com',
+      phone: '+5491122334455'
+    })
+    .returning();
+
+  const [renterAlpha5] = await db
+    .insert(schema.renters)
+    .values({
+      organizationId: orgAlpha.id,
+      fullName: 'Sofía Díaz',
+      email: 'sofia.diaz@example.com',
+      phone: '+5491199887766'
     })
     .returning();
 
@@ -133,6 +205,46 @@ async function seed() {
     })
     .returning();
 
+  const [contractAlpha3] = await db
+    .insert(schema.contracts)
+    .values({
+      organizationId: orgAlpha.id,
+      propertyId: propAlpha3.id,
+      renterId: renterAlpha3.id,
+      startDate: '2026-02-01',
+      endDate: '2027-01-31',
+      monthlyRent: '800.00',
+      status: 'active'
+    })
+    .returning();
+
+  const [contractAlpha4] = await db
+    .insert(schema.contracts)
+    .values({
+      organizationId: orgAlpha.id,
+      propertyId: propAlpha4.id,
+      renterId: renterAlpha4.id,
+      startDate: '2025-11-01',
+      endDate: '2028-10-31',
+      monthlyRent: '5000.00',
+      status: 'active'
+    })
+    .returning();
+
+  const [contractAlpha5] = await db
+    .insert(schema.contracts)
+    .values({
+      organizationId: orgAlpha.id,
+      propertyId: propAlpha5.id,
+      renterId: renterAlpha5.id,
+      startDate: '2026-03-01',
+      endDate: '2027-02-28',
+      monthlyRent: '3000.00',
+      status: 'active'
+    })
+    .returning();
+
+
   // Payments for Contract 1
   await db.insert(schema.payments).values([
     {
@@ -146,7 +258,23 @@ async function seed() {
     {
       organizationId: orgAlpha.id,
       contractId: contractAlpha1.id,
-      dueDate: '2026-01-15', // FECHA PASADA PERO PENDIENTE -> Para probar el botón de Mantenimiento!
+      dueDate: '2026-05-01',
+      paidDate: '2026-05-03',
+      amount: '1200.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha1.id,
+      dueDate: '2026-06-01',
+      paidDate: '2026-06-05',
+      amount: '1200.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha1.id,
+      dueDate: '2026-07-01', // Current month
       paidDate: null,
       amount: '1200.00',
       status: 'pending'
@@ -154,7 +282,7 @@ async function seed() {
     {
       organizationId: orgAlpha.id,
       contractId: contractAlpha1.id,
-      dueDate: '2026-08-01', // FECHA FUTURA PENDIENTE -> No cambiará al correr Mantenimiento
+      dueDate: '2026-08-01', // Future
       paidDate: null,
       amount: '1200.00',
       status: 'pending'
@@ -166,17 +294,109 @@ async function seed() {
     {
       organizationId: orgAlpha.id,
       contractId: contractAlpha2.id,
-      dueDate: '2026-01-10',
-      paidDate: null,
+      dueDate: '2026-05-10',
+      paidDate: '2026-05-12',
       amount: '2500.00',
-      status: 'overdue'
+      status: 'paid'
     },
     {
       organizationId: orgAlpha.id,
       contractId: contractAlpha2.id,
-      dueDate: '2026-01-20', // FECHA PASADA PERO PENDIENTE -> También cambiará a Overdue al presionar el botón!
+      dueDate: '2026-06-10',
+      paidDate: '2026-06-15',
+      amount: '2500.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha2.id,
+      dueDate: '2026-07-10', // Past in July
       paidDate: null,
       amount: '2500.00',
+      status: 'overdue'
+    }
+  ]);
+
+  // Payments for Contract 3
+  await db.insert(schema.payments).values([
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha3.id,
+      dueDate: '2026-06-01',
+      paidDate: '2026-06-05',
+      amount: '800.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha3.id,
+      dueDate: '2026-07-01',
+      paidDate: '2026-07-02',
+      amount: '800.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha3.id,
+      dueDate: '2026-08-01',
+      paidDate: null,
+      amount: '800.00',
+      status: 'pending'
+    }
+  ]);
+
+  // Payments for Contract 4
+  await db.insert(schema.payments).values([
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha4.id,
+      dueDate: '2026-05-01',
+      paidDate: null,
+      amount: '5000.00',
+      status: 'overdue'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha4.id,
+      dueDate: '2026-06-01',
+      paidDate: null,
+      amount: '5000.00',
+      status: 'overdue'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha4.id,
+      dueDate: '2026-07-01',
+      paidDate: null,
+      amount: '5000.00',
+      status: 'overdue'
+    }
+  ]);
+
+  // Payments for Contract 5
+  await db.insert(schema.payments).values([
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha5.id,
+      dueDate: '2026-05-01',
+      paidDate: '2026-05-01',
+      amount: '3000.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha5.id,
+      dueDate: '2026-06-01',
+      paidDate: '2026-06-03',
+      amount: '3000.00',
+      status: 'paid'
+    },
+    {
+      organizationId: orgAlpha.id,
+      contractId: contractAlpha5.id,
+      dueDate: '2026-07-01',
+      paidDate: null,
+      amount: '3000.00',
       status: 'pending'
     }
   ]);

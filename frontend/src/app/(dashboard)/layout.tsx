@@ -3,6 +3,7 @@
 import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../context/LanguageContext';
 import { LanguageSwitcher } from '../../components/LanguageSwitcher';
+import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -24,19 +25,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
 
-  if (loading) {
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      console.log('DashboardLayout: isAuthenticated is false, redirecting to /login');
+      router.push('/login');
+    }
+  }, [loading, isAuthenticated, router]);
+
+  if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0B0F19]">
         <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    if (typeof window !== 'undefined') {
-      router.push('/login');
-    }
-    return null;
   }
 
   const navItems = [
