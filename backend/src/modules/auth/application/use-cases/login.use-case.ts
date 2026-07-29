@@ -39,17 +39,9 @@ export class LoginUseCase {
     // 4. Reset Failed Login Attempts
     await this.tokenService.clearFailedLogin(email);
 
-    // Fetch org name for UI (directly via db, simple query)
-    const { db } = await import('../../../../db/index.js');
-    const schema = await import('../../../../db/schema.js');
-    const { eq } = await import('drizzle-orm');
-    
-    const [organization] = await db
-      .select({ name: schema.organizations.name })
-      .from(schema.organizations)
-      .where(eq(schema.organizations.id, user.organizationId));
-
-    const organizationName = organization?.name || 'Unknown Organization';
+    // Fetch org name for UI (via repository instead of direct db query to preserve Hexagonal Architecture)
+    const orgName = await this.authRepo.findOrganizationNameById(user.organizationId);
+    const organizationName = orgName || 'Unknown Organization';
 
     // 5. Issue Access Token
     const { accessToken } = this.tokenService.signAccessToken({

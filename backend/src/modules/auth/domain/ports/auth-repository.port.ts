@@ -8,4 +8,5 @@ export interface AuthRepositoryPort {
   findRefreshTokenByHash(tokenHash: string): Promise<RefreshTokenEntity | null>;
   revokeRefreshToken(tokenId: string): Promise<void>;
   revokeRefreshTokenByHash(tokenHash: string): Promise<void>;
+  findOrganizationNameById(orgId: string): Promise<string | null>;
 }

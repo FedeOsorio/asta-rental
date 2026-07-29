@@ -25,7 +25,8 @@ describe('LoginUseCase (Hexagonal Unit Test)', () => {
       saveRefreshToken: vi.fn(),
       findRefreshTokenByHash: vi.fn(),
       revokeRefreshToken: vi.fn(),
-      revokeRefreshTokenByHash: vi.fn()
+      revokeRefreshTokenByHash: vi.fn(),
+      findOrganizationNameById: vi.fn().mockResolvedValue('Mocked Org')
     };
 
     mockTokenService = {

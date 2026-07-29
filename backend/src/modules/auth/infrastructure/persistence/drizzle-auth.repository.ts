@@ -97,4 +97,13 @@ export class DrizzleAuthRepository implements AuthRepositoryPort {
       .set({ revokedAt: new Date() })
       .where(eq(schema.refreshTokens.tokenHash, tokenHash));
   }
+
+  async findOrganizationNameById(orgId: string): Promise<string | null> {
+    const [row] = await db
+      .select({ name: schema.organizations.name })
+      .from(schema.organizations)
+      .where(eq(schema.organizations.id, orgId));
+    
+    return row?.name || null;
+  }
 }

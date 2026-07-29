@@ -1,19 +1,20 @@
 export function generateMonthlyPaymentDates(startDateStr: string, endDateStr: string): string[] {
   const dates: string[] = [];
-  const start = new Date(startDateStr);
-  const end = new Date(endDateStr);
+  
+  const [startYear, startMonth, startDay] = startDateStr.split('-').map(Number);
+  const [endYear, endMonth, endDay] = endDateStr.split('-').map(Number);
 
-  const startDay = start.getDate();
-  let current = new Date(start);
+  let current = new Date(Date.UTC(startYear, startMonth - 1, startDay));
+  const end = new Date(Date.UTC(endYear, endMonth - 1, endDay));
 
   while (current <= end) {
-    const year = current.getFullYear();
-    const month = String(current.getMonth() + 1).padStart(2, '0');
+    const year = current.getUTCFullYear();
+    const month = String(current.getUTCMonth() + 1).padStart(2, '0');
     const day = String(startDay).padStart(2, '0');
     dates.push(`${year}-${month}-${day}`);
 
-    // Increment 1 month
-    current.setMonth(current.getMonth() + 1);
+    // Increment 1 month using UTC
+    current.setUTCMonth(current.getUTCMonth() + 1);
   }
 
   return dates;
