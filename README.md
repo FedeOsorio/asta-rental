@@ -1,92 +1,82 @@
-# ASTA Rental (Alquileres y Gestión Inmobiliaria B2B SaaS)
+# A.S.T.A. Rental (Alquileres y Gestión Inmobiliaria B2B SaaS)
 
-ASTA Rental is a modern, high-performance B2B Software as a Service (SaaS) application designed for real estate agencies, property managers, and independent landlords to seamlessly manage properties, renters, contracts, and payments.
+A.S.T.A. Rental es una aplicación moderna de alto rendimiento B2B (Software as a Service) diseñada para agencias inmobiliarias, administradores de propiedades y propietarios independientes. Permite gestionar propiedades, inquilinos, contratos y pagos de manera centralizada.
 
-## 🚀 Features
+## 🚀 Características Principales
 
-*   **Multi-Tenant Architecture**: Robust organization-level data segregation (Row-Level Security) so multiple agencies can use the platform securely.
-*   **Property Management**: Manage physical properties, track statuses, and organize by organization.
-*   **Renter Profiles**: Keep a detailed repository of renters, their contact details, and their active contracts.
-*   **Smart Contracts**: Link properties to renters with specific start/end dates and rent amounts.
-*   **Automated Payments**: Auto-generation of monthly payment records via chron jobs. Track pending, paid, overdue, and cancelled payments.
-*   **Role-Based Access Control (RBAC)**: Fine-grained permissions for `admin` and `agent` roles within each organization.
-*   **Draft Communications**: Generate AI-powered communications or manual drafts to notify renters of overdue payments or updates.
-*   **Maintenance Ticketing**: Create and track maintenance requests linked to specific properties.
-*   **Secure Authentication**: JWT-based authentication with automatic refresh token rotation, cross-site origin protection, and brute-force mitigation.
-*   **Bilingual Interface**: Seamlessly switch between Spanish (es) and English (en) with full internationalization (i18n).
+*   **Arquitectura Multi-Tenant**: Segregación robusta de datos a nivel de organización mediante Row-Level Security (RLS) estricto en la base de datos (con usuario `app_user`), permitiendo que múltiples agencias usen la plataforma de forma segura y aislada.
+*   **Agente IA y Meta API (WhatsApp)**: Integración con Inteligencia Artificial para la automatización de comunicaciones con inquilinos vía WhatsApp, incluyendo cobranzas y avisos de mora.
+*   **Gestión de Propiedades e Inquilinos**: Control total sobre el estado de los inmuebles y perfiles detallados de los inquilinos con sus contratos activos.
+*   **Contratos Inteligentes y Pagos**: Vinculación de propiedades con inquilinos mediante fechas y montos específicos. Generación automática de registros de pago mensuales.
+*   **Control de Acceso por Roles (RBAC)**: Permisos detallados para roles de `admin` y `agent` dentro de cada organización.
+*   **Tickets de Mantenimiento**: Creación y seguimiento de solicitudes de reparación vinculadas a propiedades.
+*   **Seguridad y Autenticación**: Autenticación basada en JWT con rotación automática de refresh tokens y mitigación de fuerza bruta.
 
 ## 🛠 Tech Stack
 
 ### Frontend
-*   **Framework**: Next.js 14 (App Router) with React 18
-*   **Language**: TypeScript
-*   **Styling**: Tailwind CSS & custom CSS modules
-*   **State Management**: Zustand & React Context
-*   **Icons**: Lucide React
-*   **Build Tool**: Turborepo (Monorepo setup)
+*   **Framework**: Next.js 14 (App Router) con React 18
+*   **Lenguaje**: TypeScript
+*   **Estilos**: Tailwind CSS
+*   **Manejo de Estado**: Zustand & React Context
 
-### Backend
-*   **Runtime**: Node.js & Express.js
-*   **Language**: TypeScript
-*   **Database**: PostgreSQL
-*   **ORM**: Drizzle ORM (Type-safe schema definition and migrations)
-*   **Caching/Rate Limiting**: Redis
-*   **Authentication**: JWT (JSON Web Tokens) with HttpOnly cookies & localStorage fallback mechanism.
-*   **Validation**: Zod
+### Backend (Arquitectura Hexagonal)
+*   **Entorno**: Node.js & Express.js
+*   **Lenguaje**: TypeScript
+*   **Base de Datos**: PostgreSQL (NeonDB)
+*   **ORM**: Drizzle ORM (Migraciones y esquemas tipados)
+*   **Arquitectura**: Hexagonal (Puertos y Adaptadores) para desacoplar la lógica de negocio de la base de datos.
+*   **Tests**: Vitest para pruebas unitarias y de integración.
 
 ### Shared Package
-*   `@asta-rental/shared`: A common workspace package sharing DTOs, Zod schemas, types, and constants between the backend and frontend.
+*   `@asta-rental/shared`: Espacio de trabajo común que comparte DTOs, esquemas Zod, tipos y constantes entre el backend y frontend.
 
-## 📦 Project Structure (Monorepo)
+## 📦 Estructura del Proyecto (Monorepo)
 
 ```
 asta-rental/
-├── frontend/      # Next.js 14 application
-├── backend/       # Express server & APIs
-└── shared/        # Shared TypeScript interfaces & Zod schemas
+├── frontend/      # Aplicación web en Next.js 14
+├── backend/       # Servidor Express.js con Arquitectura Hexagonal
+└── shared/        # Interfaces TypeScript y esquemas Zod compartidos
 ```
 
-## ⚙️ Local Development Setup
+## ⚙️ Desarrollo Local
 
-### Prerequisites
-*   Node.js (v18+)
+### Requisitos Previos
+*   Node.js (v24+)
 *   PostgreSQL
-*   Redis (running locally on port 6379)
 
-### 1. Environment Variables
-Create a `.env.local` file in `frontend/` and `.env` in `backend/` with the appropriate local configurations.
-*(Example configurations are standard for localhost 3000/4000).*
+### 1. Variables de Entorno
+Crear un archivo `.env.local` en `frontend/` y `.env` en `backend/` con las configuraciones locales adecuadas.
 
-### 2. Install Dependencies
+### 2. Instalar Dependencias
 ```bash
 npm install
 ```
 
-### 3. Database Setup & Seeding
+### 3. Base de Datos y Migraciones
 ```bash
-# In the backend directory
-npm run db:migrate
-npm run db:seed
+# Correr en la raíz del proyecto
+npm run db:migrate --workspace=backend
+npm run db:seed --workspace=backend
 ```
-*The seed command sets up a default organization ("Alpha Real Estate Solutions") and an admin user.*
+*El script de seed crea una organización por defecto y usuarios de prueba.*
 
-### 4. Run Development Servers
+### 4. Iniciar Servidores de Desarrollo
 ```bash
-# Terminal 1: Run frontend
-cd frontend
-npm run dev
+# Terminal 1: Iniciar frontend
+npm run dev --workspace=frontend
 
-# Terminal 2: Run backend
-cd backend
-npm run dev
+# Terminal 2: Iniciar backend
+npm run dev --workspace=backend
 ```
+*(También podés correr `npm run dev` en la raíz para iniciar ambos al mismo tiempo).*
 
-The application will be available at `http://localhost:3000`.
+La aplicación estará disponible en `http://localhost:3000`.
 
-## 🛡 Security Highlights
-*   **Row-Level Security (RLS)**: Enforced directly at the PostgreSQL level via Drizzle schemas to guarantee tenant data isolation.
-*   **Token Rotation**: Refresh tokens are securely rotated upon every usage and revoked in PostgreSQL, preventing replay attacks.
-*   **Strict CORS Policy**: Designed for secure client-server cross-origin communication with credentials.
+## 🛡 Seguridad Destacada
+*   **Row-Level Security (RLS)**: Aplicado a nivel de base de datos en PostgreSQL (forzando consultas a través del rol `app_user`) para garantizar el aislamiento absoluto de los datos de cada inquilino/agencia.
+*   **Rotación de Tokens**: Los refresh tokens se rotan de forma segura en cada uso y se invalidan en la base de datos para prevenir ataques de repetición.
 
-## 📄 License
-All rights reserved.
+## 📄 Licencia
+Todos los derechos reservados.
