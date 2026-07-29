@@ -24,7 +24,7 @@ async function runMigrations() {
     const statements = sql.split('--> statement-breakpoint');
     for (const stmt of statements) {
       if (stmt.trim()) {
-        await pool.query(stmt).catch((err) => {
+        await pool.query(stmt).catch(() => {
           // ignore duplicate objects/tables
         });
       }

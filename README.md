@@ -1,91 +1,92 @@
-# asta-rental — Multi-tenant Real Estate SaaS
+# ASTA Rental (Alquileres y Gestión Inmobiliaria B2B SaaS)
 
-A production-ready Multi-tenant Real Estate Rental Management SaaS built with **TypeScript**, **Next.js (App Router)**, **Node.js (Express)**, and **PostgreSQL Row Level Security (RLS)**.
+ASTA Rental is a modern, high-performance B2B Software as a Service (SaaS) application designed for real estate agencies, property managers, and independent landlords to seamlessly manage properties, renters, contracts, and payments.
 
-Designed as a technical portfolio project demonstrating **security-by-design**, **multi-tenancy isolation**, **disciplined testing**, and **AI-assisted development workflow**.
+## 🚀 Features
 
----
+*   **Multi-Tenant Architecture**: Robust organization-level data segregation (Row-Level Security) so multiple agencies can use the platform securely.
+*   **Property Management**: Manage physical properties, track statuses, and organize by organization.
+*   **Renter Profiles**: Keep a detailed repository of renters, their contact details, and their active contracts.
+*   **Smart Contracts**: Link properties to renters with specific start/end dates and rent amounts.
+*   **Automated Payments**: Auto-generation of monthly payment records via chron jobs. Track pending, paid, overdue, and cancelled payments.
+*   **Role-Based Access Control (RBAC)**: Fine-grained permissions for `admin` and `agent` roles within each organization.
+*   **Draft Communications**: Generate AI-powered communications or manual drafts to notify renters of overdue payments or updates.
+*   **Maintenance Ticketing**: Create and track maintenance requests linked to specific properties.
+*   **Secure Authentication**: JWT-based authentication with automatic refresh token rotation, cross-site origin protection, and brute-force mitigation.
+*   **Bilingual Interface**: Seamlessly switch between Spanish (es) and English (en) with full internationalization (i18n).
 
-## 🚀 Key Features & Architectural Highlights
+## 🛠 Tech Stack
 
-1. **Native PostgreSQL Row Level Security (RLS)**
-   - Tenant data isolation (`organizations`) enforced directly at the database engine level via `app.current_org` session variable.
-   - Eliminates application-layer forgotten `WHERE organization_id = ?` leaks.
+### Frontend
+*   **Framework**: Next.js 14 (App Router) with React 18
+*   **Language**: TypeScript
+*   **Styling**: Tailwind CSS & custom CSS modules
+*   **State Management**: Zustand & React Context
+*   **Icons**: Lucide React
+*   **Build Tool**: Turborepo (Monorepo setup)
 
-2. **Monorepo Architecture (npm Workspaces)**
-   - `shared`: Domain TypeScript types and Zod validation schemas.
-   - `backend`: Express REST API with PostgreSQL pool wrapper, Redis cache, JWT auth, and Vitest.
-   - `frontend`: Next.js App Router UI with modern aesthetic and state management.
+### Backend
+*   **Runtime**: Node.js & Express.js
+*   **Language**: TypeScript
+*   **Database**: PostgreSQL
+*   **ORM**: Drizzle ORM (Type-safe schema definition and migrations)
+*   **Caching/Rate Limiting**: Redis
+*   **Authentication**: JWT (JSON Web Tokens) with HttpOnly cookies & localStorage fallback mechanism.
+*   **Validation**: Zod
 
-3. **Secure Authentication & Token Strategy**
-   - In-memory Short-lived Access Tokens (JWT) + httpOnly Secure Refresh Tokens with DB rotation & Redis token blacklisting.
-   - Redis Rate Limiting on authentication endpoints.
+### Shared Package
+*   `@asta-rental/shared`: A common workspace package sharing DTOs, Zod schemas, types, and constants between the backend and frontend.
 
-4. **Transactional Business Logic**
-   - Atomic database transactions for contract generation, automatic rent schedule generation, and property availability updates.
-
-5. **AI Agent Use Cases Versioning**
-   - Features documented under `.specs/` and validated by automated test suites in CI.
-
----
-
-## 🛠️ Quickstart (Development)
-
-### Prerequisites
-- Node.js >= 20
-- Docker & Docker Compose
-
-### Setup Instructions
-
-1. **Clone & Install Dependencies**
-   ```bash
-   git clone https://github.com/your-username/asta-rental.git
-   cd asta-rental
-   npm install
-   ```
-
-2. **Start Infrastructure (PostgreSQL 16 + Redis 7)**
-   ```bash
-   npm run db:up
-   ```
-
-3. **Run Drizzle Migrations & Seed Database**
-   ```bash
-   npm run db:migrate --workspace=backend
-   npm run db:seed --workspace=backend
-   ```
-
-4. **Start Development Servers (Backend & Frontend)**
-   ```bash
-   npm run dev
-   ```
-
-5. **Test Health Check**
-   ```bash
-   curl http://localhost:4000/health
-   ```
-
----
-
-## 🧪 Testing
-
-```bash
-# Run backend integration & unit tests
-npm run test --workspace=backend
-```
-
----
-
-## 📁 Repository Structure
+## 📦 Project Structure (Monorepo)
 
 ```
 asta-rental/
-├── .specs/               # Feature specs & agent use cases
-├── docs/                 # Architecture documentation
-├── shared/               # Shared types & Zod schemas
-├── backend/              # Express API & DB layer (Drizzle ORM + pg pool)
-├── frontend/             # Next.js App Router application
-├── docker-compose.yml    # Postgres + Redis dev containers
-├── package.json          # npm workspace root
-└── README.md
+├── frontend/      # Next.js 14 application
+├── backend/       # Express server & APIs
+└── shared/        # Shared TypeScript interfaces & Zod schemas
 ```
+
+## ⚙️ Local Development Setup
+
+### Prerequisites
+*   Node.js (v18+)
+*   PostgreSQL
+*   Redis (running locally on port 6379)
+
+### 1. Environment Variables
+Create a `.env.local` file in `frontend/` and `.env` in `backend/` with the appropriate local configurations.
+*(Example configurations are standard for localhost 3000/4000).*
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Database Setup & Seeding
+```bash
+# In the backend directory
+npm run db:migrate
+npm run db:seed
+```
+*The seed command sets up a default organization ("Alpha Real Estate Solutions") and an admin user.*
+
+### 4. Run Development Servers
+```bash
+# Terminal 1: Run frontend
+cd frontend
+npm run dev
+
+# Terminal 2: Run backend
+cd backend
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`.
+
+## 🛡 Security Highlights
+*   **Row-Level Security (RLS)**: Enforced directly at the PostgreSQL level via Drizzle schemas to guarantee tenant data isolation.
+*   **Token Rotation**: Refresh tokens are securely rotated upon every usage and revoked in PostgreSQL, preventing replay attacks.
+*   **Strict CORS Policy**: Designed for secure client-server cross-origin communication with credentials.
+
+## 📄 License
+All rights reserved.

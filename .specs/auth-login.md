@@ -13,5 +13,5 @@ Handles user authentication, password verification, rate limiting, and token iss
    - Issue 15-minute Access Token (JWT) with payload `{ sub: userId, org: organizationId, role, jti }`.
    - Issue 7-day Refresh Token (opaque crypto 256-bit string), store SHA-256 hash in `refresh_tokens` table.
 7. **Response**:
-   - `200 OK` body: `{ user: { id, email, role, organizationId }, accessToken }`.
-   - Cookie: `refresh_token` set as `httpOnly`, `Secure` (in prod), `SameSite=Strict`, path `/auth`.
+   - `200 OK` body: `{ user: { id, email, role, organizationId }, accessToken, refreshToken }`.
+   - Cookie: `refresh_token` set as `httpOnly`, `Secure=false` (in dev), `SameSite=Lax`, path `/`.
